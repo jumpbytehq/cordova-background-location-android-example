@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        id="cordova-background-location-android"
+        version="1.0.0">
+    <name>CDVBackgroundGeoLocation</name>
+    <description>Cordova Background GeoLocation Plugin</description>
+    <license>Apache-2.0</license>
+    <keywords>cordova,phonegap,background geolocation</keywords>
+
+    <engines>
+        <engine name="cordova" version=">=3.0.0"/>
+    </engines>
+
+    <js-module src="www/bgGeoLocationAndroid.js" name="bgGeoLocationAndroid">
+        <clobbers target="bgGeoLocationAndroid"/>
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+        <source-file src="src/android/BootCompletedReceiver.java" target-dir="src/com/marianhello/cordova/bgloc"/>
+        <source-file src="src/android/Config.java" target-dir="src/com/marianhello/cordova/bgloc"/>
+        <source-file src="src/android/Constant.java" target-dir="src/com/marianhello/cordova/bgloc"/>
+        <source-file src="src/android/ServiceProviderEnum.java" target-dir="src/com/marianhello/cordova/bgloc"/>
+        <source-file src="src/android/ServiceProviderFactory.java" target-dir="src/com/marianhello/cordova/bgloc"/>
+        <source-file src="src/android/LocationService.java" target-dir="src/com/tenforwardconsulting/cordova/bgloc"/>
+        <source-file src="src/android/ServiceProvider.java" target-dir="src/com/tenforwardconsulting/cordova/bgloc"/>
+        <source-file src="src/android/BackgroundGeolocationPlugin.java" target-dir="src/com/tenforwardconsulting/cordova/bgloc"/>
+        <source-file src="src/android/AbstractLocationProvider.java" target-dir="src/com/tenforwardconsulting/cordova/bgloc"/>
+        <source-file src="src/android/DistanceFilterLocationProvider.java" target-dir="src/com/tenforwardconsulting/cordova/bgloc"/>
+        <source-file src="src/android/FusedLocationProvider.java" target-dir="src/com/tenforwardconsulting/cordova/bgloc"/>
+
+        <source-file src="src/android/data/LocationProxy.java" target-dir="src/com/tenforwardconsulting/cordova/bgloc/data" />
+        <source-file src="src/android/data/DAOFactory.java" target-dir="src/com/tenforwardconsulting/cordova/bgloc/data" />
+        <source-file src="src/android/data/LocationDAO.java" target-dir="src/com/tenforwardconsulting/cordova/bgloc/data" />
+        <source-file src="src/android/data/ConfigurationDAO.java" target-dir="src/com/tenforwardconsulting/cordova/bgloc/data" />
+        <source-file src="src/android/data/sqlite/LocationContract.java" target-dir="src/com/tenforwardconsulting/cordova/bgloc/data/sqlite" />
+        <source-file src="src/android/data/sqlite/ConfigurationContract.java" target-dir="src/com/tenforwardconsulting/cordova/bgloc/data/sqlite" />
+        <source-file src="src/android/data/sqlite/SQLiteOpenHelper.java" target-dir="src/com/tenforwardconsulting/cordova/bgloc/data/sqlite" />
+        <source-file src="src/android/data/sqlite/SQLiteLocationDAO.java" target-dir="src/com/tenforwardconsulting/cordova/bgloc/data/sqlite" />
+        <source-file src="src/android/data/sqlite/SQLiteConfigurationDAO.java" target-dir="src/com/tenforwardconsulting/cordova/bgloc/data/sqlite" />
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+            <service android:enabled="true" android:exported="false" android:name="com.tenforwardconsulting.cordova.bgloc.LocationService"
+                     android:process=":remote" android:stopWithTask="false">
+            </service>
+            <receiver
+                  android:name="com.marianhello.cordova.bgloc.BootCompletedReceiver"
+                  android:enabled="true"
+                  android:exported="true">
+               <intent-filter>
+                  <action android:name="android.intent.action.BOOT_COMPLETED" />
+               </intent-filter>
+            </receiver>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+            <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION"/>
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+            <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.WAKE_LOCK"/>
+        </config-file>
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="BackgroundGeoLocation">
+                <param name="android-package" value="com.tenforwardconsulting.cordova.bgloc.BackgroundGeolocationPlugin"/>
+            </feature>
+        </config-file>
+        <framework src="com.google.android.gms:play-services-location:8.4.0" />
+        <framework src="com.android.support:support-v4:+" />
+    </platform>
+</plugin>
